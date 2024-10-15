@@ -10,7 +10,7 @@ class ModelMaker:
     
 
     def __init__(self, src_dir, dst_dir, est_file, info_file, graph_file, input_size, hist_file,
-                 filters, kernel_size, pool_size, dense_dims, lr, min_lr,  batch_size, epochs, vaild_rate, reuse_cnt, es_patience, lr_patience):
+                 filters, dense_dims, lr, min_lr,  batch_size, epochs, vaild_rate, reuse_cnt, es_patience, lr_patience):
         self.src_dir = src_dir
         self.dst_dir = dst_dir
         self.est_file = est_file
@@ -18,9 +18,6 @@ class ModelMaker:
         self.graph_file =graph_file
         self.hist_file = hist_file
         self.input_size = input_size
-        self.filters = filters
-        self.kernel_size = kernel_size
-        self.pool_size = pool_size
         self.dense_dims = dense_dims
         self.lr = lr
         self.min_lr = min_lr
@@ -34,23 +31,25 @@ class ModelMaker:
 
     def define_model(self):
 
-        input_x = Input(shape=(*self.input_size, 3))
-        x = input_x
 
-        for f in self.filters:
-            x = mutil.add_conv_pool_layers(x, f, self.kernel_size, self.pool_size)
+        base_model = VGG16(include_top = False, input_shape=(*self.input_size, 3))
 
+
+
+        for layer in base_model.layers:
+            layer.trainable = False
+
+        x = base_model.output
         x = Flatten()(x)
 
 
         for dim in self.dense_dims[:-1]:
             x = mutil.add_dense_layer(x, dim)
 
-        print(self.dense_dims[-1])
         x = mutil.add_dense_layer(x, self.dense_dims[-1] - 1, use_bn = False, activation='softmax')
 
 
-        model = Model(input_x, x)
+        model = Model(base_model.input, x)
 
 
         model.compile(

@@ -2,18 +2,6 @@ from tensorflow.keras.layers import Activation, BatchNormalization, Conv2D, Dens
 from tensorflow.keras.utils import plot_model
 
 
-def add_conv_pool_layers(x, filters, kernel_size, pool_size, activation='relu'):
-    x = Conv2D(filters, kernel_size, padding='same', use_bias = False)(x)
-    x = Activation(activation)(x)
-    x = BatchNormalization()(x)
-    x = Conv2D(filters, kernel_size, padding='same', activation=activation)(x)
-    x = Activation(activation)(x)
-    x = BatchNormalization()(x)
-
-    x = MaxPooling2D(pool_size)(x)
-
-    return x
-
 
 
 def add_dense_layer(x, dim, use_bn = True, activation='relu'):

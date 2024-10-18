@@ -1,3 +1,5 @@
+
+from tensorflow.keras.applications import VGG16
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.layers import Flatten, Input
 from tensorflow.keras.models import Model
@@ -10,7 +12,7 @@ class ModelMaker:
     
 
     def __init__(self, src_dir, dst_dir, est_file, info_file, graph_file, input_size, hist_file,ft_hist_file,
-                 filters, dense_dims, lr,ft_lr, min_ft_lr,  min_lr,  batch_size, epochs, vaild_rate, reuse_cnt, es_patience, lr_patience, ft_start):
+                  dense_dims, lr,ft_lr, min_ft_lr,  min_lr,  batch_size, epochs, vaild_rate, reuse_cnt, es_patience, lr_patience, ft_start):
         self.src_dir = src_dir
         self.dst_dir = dst_dir
         self.est_file = est_file
@@ -73,7 +75,7 @@ class ModelMaker:
 
         model.compile(
             optimizer = Adam(learning_rate= self.ft_lr),
-            loss = 'categoricak_crossentropy',
+            loss = 'categorical_crossentropy',
             metrics = ['accuracy']
         )
 
@@ -146,7 +148,7 @@ class ModelMaker:
 
     def execute(self):
 
-        model, history = self.fit_model()
+        model, history, ft_history = self.fit_model()
 
         util.mkdir(self.dst_dir, rm=True)
         model.save(self.est_file)
@@ -168,5 +170,5 @@ class ModelMaker:
         print('val_loss: %f(Epoch: %d)' % (min_val, min_ind + 1))
 
         print('After fine-tuning')
-        min_val, min_ind = get_min(history['val_loss'])
+        min_val, min_ind = get_min(ft_history['val_loss'])
         print('val_loss: %f(Epoch: %d)' % (min_val, min_ind + 1))

@@ -12,7 +12,7 @@ class ModelMaker:
     
 
     def __init__(self, src_dir, dst_dir, est_file, info_file, graph_file, input_size, hist_file,ft_hist_file,
-                  dense_dims, lr,ft_lr, min_ft_lr,  min_lr,  batch_size, epochs, vaild_rate, reuse_cnt, es_patience, lr_patience, ft_start):
+                  cls_file, dense_dims, lr,ft_lr, min_ft_lr,  min_lr,  batch_size, epochs, vaild_rate, reuse_cnt, es_patience, lr_patience, ft_start):
         self.src_dir = src_dir
         self.dst_dir = dst_dir
         self.est_file = est_file
@@ -20,6 +20,7 @@ class ModelMaker:
         self.graph_file =graph_file
         self.hist_file = hist_file
         self.ft_hist_file = ft_hist_file
+        self.cls_file = cls_file
         self.input_size = input_size
         self.dense_dims = dense_dims
         self.lr = lr
@@ -92,7 +93,7 @@ class ModelMaker:
     
     def fit_model(self):
 
-        train_ds, train_n, valid_ds, valid_n = util.make_generator(
+        train_ds, train_n, valid_ds, valid_n, cls_info = util.make_generator(
             self.src_dir, self.vaild_rata, self.input_size, self.batch_size
         )
 
@@ -154,6 +155,12 @@ class ModelMaker:
         model.save(self.est_file)
 
         mutil.save_model_info(self.info_file, self.graph_file, model)
+
+
+        with open(self.cls_file, 'wb') as f:
+            pickle.dump(cls_info, f)
+        print("Classes: %s" % cls_info)
+
 
         util.plot(history, self.hist_file)
         util.plot(ft_history, self.ft_hist_file)

@@ -79,7 +79,7 @@ def make_generator(src_dir, valid_rate, input_size, batch_size):
     cls_info = {v: k for k, v in train_generator.class_indices.items()}
 
 
-    return train_ds, train_generator.n, valid_ds, valid_generator.n
+    return train_ds, train_generator.n, valid_ds, valid_generator.n, cls_info
     
 
 def plot(hisotry, filename):

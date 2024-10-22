@@ -89,5 +89,6 @@ if 'est' in argv:
         cls_file = TRN_CLS_FILE,
         drs_file = EST_DRS_FILE,
         srs_file = EST_SRS_FILE,
-        input_size = TRN_INFO_FILE
+        input_size = TRN_INPUT_SIEZ
     )
+    estimator.execute()

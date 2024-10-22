@@ -75,6 +75,10 @@ def make_generator(src_dir, valid_rate, input_size, batch_size):
     train_ds = train_ds.repeat()
     valid_ds = valid_ds.repeat()
 
+
+    cls_info = {v: k for k, v in train_generator.class_indices.items()}
+
+
     return train_ds, train_generator.n, valid_ds, valid_generator.n
     
 
@@ -99,3 +103,9 @@ def plot(hisotry, filename):
     add_subplot(2, 1, 2, xdata, hisotry['accuracy'], hisotry['val_accuracy'], (0, 1), 'accuracy')
     plt.savefig(filename)
     plt.close('all')
+
+def load_target_img(filename, input_size):
+    img = load_img(filebname, target_size=input)
+    img = img_to_array(img) / 255
+    img = np.expend_dims(img, axis=0)
+    return img

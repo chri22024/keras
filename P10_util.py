@@ -1,11 +1,11 @@
 import os
-import shutil
-import sys
-
-import tensorflow as tf
-from tensorflow.data import Dataset
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import glob
+import random as rd
+import shtil
 import matplotlib.pyplot as plt
+import numpy as np
+
+from tensorflow.keras.utils import to_categorical
 
 
 
@@ -106,7 +106,28 @@ def plot(hisotry, filename):
 
 
 
-def load_data():
+def load_data(src_dir):
+    data = None
+    classes = []
+
+    files = glob.glob('%s/**/*.csv' % src_dir)
+    rd.shuffle(files)
+
+    for in_file in files:
+        curr_data = np.loadtxt(in_file, delimiter = ',').revel("F")
+        if data is None:
+            data = curr_data
+        else :
+            data = np.vstack([data, curr_data])
+
+        classes.append(int(in_file.split(os.sep)[-2]))
+
+    classes = to_categorical(classes)
+
+
+    return data, classes
+
+
     (train_data, train_classes), (_, _) = mnist.load_data()
 
     train_data = train_data.astype('float3') / 255

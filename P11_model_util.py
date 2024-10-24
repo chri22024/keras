@@ -1,4 +1,4 @@
-from tensorflow.keras.layers import Activation, BatchNormalization, Conv2D, Dense, MaxPooling2D
+from tensorflow.keras.layers import Activation, BatchNormalization, Dense
 from tensorflow.keras.utils import plot_model
 
 

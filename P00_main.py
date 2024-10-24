@@ -2,93 +2,31 @@ import os
 import sys
 
 
-TRN_SRC_DIR = 'D00_dataset/training'
-TRN_DST_DIR = 'D01_estimator'
-TRN_EST_FILE = os.path.join(TRN_DST_DIR, 'estimator.h5')
-TRN_CLS_FILE = os.path.join(TRN_DST_DIR, 'class.pkl')
-TRN_INFO_FILE = os.path.join(TRN_DST_DIR, 'model_info.txt')
-TRN_GRAPH_FILE = os.path.join(TRN_DST_DIR, 'model_graph.pdf')
-TRN_HIST_FILE = os.path.join(TRN_DST_DIR, 'history.pdf')
-TRN_FT_HIST_FILE = os.path.join(TRN_DST_DIR, 'ft_history.pdf')
-TRN_INPUT_SIEZ = (160, 160)
-TRN_DENSE_DIMS = [4096, 2048, 1024, 128]
-TRN_LR = 1e-3
-TRN_FT_LT = 1e-5
-TRN_MIN_FT_LR = 1e-8
-TRN_MIN_LR = 1e-7
-TRN_BATCH_SIZE = 32
-TRN_EPOCHS = 10
-TRN_VALID_RATE = 0.2
-TRN_REUSE_CNT = 1
-TRN_ES_PATIENCE = 30
-TRN_LR_PATIENCE = 10
-TRN_FT_START = 15
-
-EST_SRC_DIR = 'D00_dataset/test'
-EST_DST_DIR = 'D02_resule'
-EST_DRS_FILE = os.path.join(EST_DST_DIR, 'datailed_result.txt')
-EST_SRS_FILE = os.path.join(EST_DST_DIR, 'summary_result.txt')
+DST_DIR = 'D01_estimator'
+EST_FILE = os.path.join(TRN_DST_DIR, 'estimator.h5')
+INFO_FILE = os.path.join(TRN_DST_DIR, 'model_info.txt')
+GRAPH_FILE = os.path.join(TRN_DST_DIR, 'model_graph.pdf')
+HIST_FILE = os.path.join(TRN_DST_DIR, 'history.pdf')
+DENSE_DIMS = [4096, 2048, 1024, 128]
+LR = 1e-3
+BATCH_SIZE = 32
+EPOCHS = 10
+VALID_RATE = 0.2
 
 
-if len(sys.argv):
-    print('Usage: python3 %s STEP...' % sys.argv[0])
-    print('''
-------------
-    Step options
----------------
-    trn: Makes an estimator.
-    est: Conducts estimation.
-    ''')
 
-    sys.exit(0)
+from P01_model_maker import ModelMaker
+maker = ModelMaker(
+    dst_dir = DST_DIR,
+    est_file = EST_FILE,
+    info_file = INFO_FILE,
+    graph_file = GRAPH_FILE,
+    hist_file = HIST_FILE,
+    dense_dims =DENSE_DIMS,
+    lr = LR,
+    batch_size = TRN_BATCH_SIZE,
+    epochs = TRN_EPOCHS,
+    vaild_rate = TRN_VALID_RATE,
+)
 
-
-if 'tr' in sys.argv:
-    print('Making an estimator...')
-
-
-    n_class = len(os.listdir(TRN_SRC_DIR))
-    TRN_DENSE_DIMS.append(n_class)
-
-    from P01_model_maker import ModelMaker
-    maker = ModelMaker(
-        src_dir = TRN_SRC_DIR,
-        dst_dir = TRN_DST_DIR,
-        est_file = TRN_EST_FILE,
-        info_file = TRN_INFO_FILE,
-        graph_file = TRN_GRAPH_FILE,
-        ft_hist_file = TRN_FT_HIST_FILE,
-        input_size = TRN_INPUT_SIEZ,
-        hist_file = TRN_HIST_FILE,
-        dense_dims =TRN_DENSE_DIMS,
-        lr = TRN_LR,
-        ft_lr = TRN_FT_LT,
-        min_ft_lr = TRN_MIN_FT_LR,
-        min_lr = TRN_MIN_LR,
-        batch_size = TRN_BATCH_SIZE,
-        epochs = TRN_EPOCHS,
-        vaild_rate = TRN_VALID_RATE,
-        reuse_cnt = TRN_REUSE_CNT,
-        es_patience = TRN_ES_PATIENCE,
-        lr_patience = TRN_LR_PATIENCE,
-        ft_start = TRN_FT_START
-
-
-    )
-
-    maker.execute()
-
-if 'est' in argv:
-    print('Conducting estimation...')
-
-    from P02_estimator import Estimator
-    estimator = Estimator(
-        src_dir = EST_SRC_DIR,
-        dst_dir = EST_DST_DIR,
-        est_file = TRN_EST_FILE,
-        cls_file = TRN_CLS_FILE,
-        drs_file = EST_DRS_FILE,
-        srs_file = EST_SRS_FILE,
-        input_size = TRN_INPUT_SIEZ
-    )
-    estimator.execute()
+maker.execute()

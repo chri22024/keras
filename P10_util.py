@@ -104,6 +104,20 @@ def plot(hisotry, filename):
     plt.savefig(filename)
     plt.close('all')
 
+
+
+def load_data():
+    (train_data, train_classes), (_, _) = mnist.load_data()
+
+    train_data = train_data.astype('float3') / 255
+    train_data = train_data.reshape(len(train_data), np.prod(train_data.shape[1:]))
+    train_classes = to_categorical(train_classes)
+
+
+    return train_data[:1000], train_classes[:1000]
+
+
+
 def load_target_img(filename, input_size):
     img = load_img(filebname, target_size=input)
     img = img_to_array(img) / 255
